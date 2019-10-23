@@ -39,6 +39,12 @@ public class PessoaController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
+    @RequestMapping(value = "/pessoa/cpf/{cpf}", method = RequestMethod.GET)
+    public List<Pessoa> GetByCpf(@PathVariable(value = "cpf") String cpf)
+    {
+        return pessoaService.findByCpf(cpf);
+    }
+    
     @RequestMapping(value = "/pessoa", method =  RequestMethod.POST)
     public Pessoa Post(@Valid @RequestBody Pessoa pessoa)
     {

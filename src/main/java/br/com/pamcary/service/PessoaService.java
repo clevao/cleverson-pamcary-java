@@ -27,6 +27,11 @@ public class PessoaService {
 	}
 	
 	@Transactional
+	public List<Pessoa> findByCpf(String cpf) {
+		return pessoaRepository.findByCpf(cpf);
+	} 
+	
+	@Transactional
 	public Pessoa save(Pessoa pessoa) {
 		return pessoaRepository.save(pessoa);
 	}
