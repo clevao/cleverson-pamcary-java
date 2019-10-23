@@ -8,4 +8,4 @@ import br.com.pamcary.entity.Pessoa;
 
 
 @Repository
-public interface PessoaRepository extends JpaRepository<Pessoa, Long> { }
+public interface PessoaRepository extends JpaRepository<Pessoa, Integer> { }

@@ -15,54 +15,54 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pamcary.entity.Pessoa;
-import br.com.pamcary.repository.PessoaRepository;
+import br.com.pamcary.service.PessoaService;
+
 
 @RestController
 public class PessoaController {
+    
     @Autowired
-    private PessoaRepository _pessoaRepository;
+    private PessoaService pessoaService;
 
     @RequestMapping(value = "/pessoa", method = RequestMethod.GET)
     public List<Pessoa> Get() {
-        return _pessoaRepository.findAll();
+        return pessoaService.findAll();
     }
 
     @RequestMapping(value = "/pessoa/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Pessoa> GetById(@PathVariable(value = "id") long id)
+    public ResponseEntity<Pessoa> GetById(@PathVariable(value = "id") Integer id)
     {
-        Optional<Pessoa> pessoa = _pessoaRepository.findById(id);
+        Optional<Pessoa> pessoa = pessoaService.findById(id);
         if(pessoa.isPresent())
             return new ResponseEntity<Pessoa>(pessoa.get(), HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
+    
     @RequestMapping(value = "/pessoa", method =  RequestMethod.POST)
     public Pessoa Post(@Valid @RequestBody Pessoa pessoa)
     {
-        return _pessoaRepository.save(pessoa);
+        return pessoaService.save(pessoa);
     }
 
     @RequestMapping(value = "/pessoa/{id}", method =  RequestMethod.PUT)
-    public ResponseEntity<Pessoa> Put(@PathVariable(value = "id") long id, @Valid @RequestBody Pessoa newPessoa)
+    public ResponseEntity<Pessoa> Put(@PathVariable(value = "id") Integer id, @Valid @RequestBody Pessoa newPessoa)
     {
-        Optional<Pessoa> oldPessoa = _pessoaRepository.findById(id);
+        Optional<Pessoa> oldPessoa = pessoaService.findById(id);
         if(oldPessoa.isPresent()){
-            Pessoa pessoa = oldPessoa.get();
-            pessoa.setNome(newPessoa.getNome());
-            _pessoaRepository.save(pessoa);
-            return new ResponseEntity<Pessoa>(pessoa, HttpStatus.OK);
+            pessoaService.save(newPessoa);
+            return new ResponseEntity<Pessoa>(newPessoa, HttpStatus.OK);
         }
         else
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/pessoa/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Object> Delete(@PathVariable(value = "id") long id)
+    public ResponseEntity<Object> Delete(@PathVariable(value = "id") Integer id)
     {
-        Optional<Pessoa> pessoa = _pessoaRepository.findById(id);
+        Optional<Pessoa> pessoa = pessoaService.findById(id);
         if(pessoa.isPresent()){
-            _pessoaRepository.delete(pessoa.get());
+            pessoaService.delete(pessoa);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         else

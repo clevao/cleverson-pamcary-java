@@ -8,7 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import br.com.pamcary.util.Util;
 
 @Entity
 @Table(name="PESSO_FISICA")
@@ -20,7 +23,8 @@ public class Pessoa implements Serializable{
 	private static final long serialVersionUID = -2601898976052487571L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="sequence_pessoa_fisica")
+	@SequenceGenerator(name="sequence_pessoa_fisica", sequenceName="sequence_pessoa_fisica", allocationSize=1)
 	@Column(name="CODIGO")
 	private Integer codigo;
 	
@@ -54,7 +58,8 @@ public class Pessoa implements Serializable{
 	}
 
 	public void setCpf(String cpf) {
-		this.cpf = cpf;
+
+		this.cpf = Util.removeNonNumeric(cpf);
 	}
 
 	public Timestamp getDataNascimento() {
