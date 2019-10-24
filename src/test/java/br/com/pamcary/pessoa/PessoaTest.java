@@ -1,8 +1,12 @@
 package br.com.pamcary.pessoa;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,12 +24,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.pamcary.AvaliacaoApplicationTests;
 import br.com.pamcary.entity.Pessoa;
+import br.com.pamcary.service.PessoaService;
 import br.com.pamcary.util.Util;
 
 public class PessoaTest extends AvaliacaoApplicationTests {
 	
 	@Autowired
 	private WebApplicationContext webApplicationContext;
+	
+	@Autowired
+	private PessoaService pessoaService;
 	
 	private MockMvc mockMvc;
 	
@@ -75,6 +83,26 @@ public class PessoaTest extends AvaliacaoApplicationTests {
 
 	}
 	
+
+	
+	@Test
+	public void testPessoaPostInvalido() throws Exception {
+		String unq = Util.getUniqId();
+		
+		Pessoa pessoa = new Pessoa();
+		pessoa.setNome(unq);
+		pessoa.setCpf("13546879854"); // cpf inválido
+		pessoa.setDataNascimento(Util.data2Timestamp("01/01/2000"));
+				
+		mockMvc.perform(
+					post("/pessoa")
+					.content(asJsonString(pessoa))
+					.contentType(MediaType.APPLICATION_JSON)
+				)
+				.andExpect(status().isConflict());
+
+	}
+	
 	@Test
 	public void testPessoaPut() throws Exception {
 		String unqNome = Util.getUniqId();
@@ -87,7 +115,8 @@ public class PessoaTest extends AvaliacaoApplicationTests {
 		pessoa.setNome(unqNome);
 		pessoa.setCpf(Util.geraCPF());
 		pessoa.setDataNascimento(Util.data2Timestamp("01/01/2000"));
-				
+		
+		// ATUALIZAÇÃO DO CADASTRO
 		mockMvc.perform(
 					put("/pessoa/" + idTeste)
 					.content(asJsonString(pessoa))
@@ -97,6 +126,7 @@ public class PessoaTest extends AvaliacaoApplicationTests {
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andExpect(jsonPath("$.codigo").exists());
 		
+		// LÊ O CADASTRO PARA VERIFICAR SE SALVOU
 		mockMvc.perform(get("/pessoa/" + idTeste))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -117,6 +147,11 @@ public class PessoaTest extends AvaliacaoApplicationTests {
 	    } catch (Exception e) {
 	        throw new RuntimeException(e);
 	    }
+	}
+	
+	@Test
+	public void testCpfCadastrado() throws Exception {
+		assertEquals(true, pessoaService.existeCpf("54213325687"));
 	}
 	
 }

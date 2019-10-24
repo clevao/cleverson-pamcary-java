@@ -273,8 +273,4 @@ public class Util {
 	    return calcDigVerif(numDig).equals(cpf.substring(9, 11));  
 	} 
 	
-	public static void main(String[] args) {
-		System.out.println(calcDigVerif("373374138"));
-	}
-
 }

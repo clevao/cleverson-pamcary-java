@@ -45,16 +45,31 @@ public class PessoaController {
         return pessoaService.findByCpf(cpf);
     }
     
+	/*
+	 * @RequestMapping(value = "/pessoa", method = RequestMethod.POST) public Pessoa
+	 * Post(@Valid @RequestBody Pessoa pessoa) { return pessoaService.save(pessoa);
+	 * }
+	 */
+    
     @RequestMapping(value = "/pessoa", method =  RequestMethod.POST)
-    public Pessoa Post(@Valid @RequestBody Pessoa pessoa)
+    public ResponseEntity<Pessoa> Post(@Valid @RequestBody Pessoa pessoa)
     {
-        return pessoaService.save(pessoa);
+        if(pessoaService.validarCadastro(pessoa, true)){
+            pessoaService.save(pessoa);
+            return new ResponseEntity<Pessoa>(pessoa, HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @RequestMapping(value = "/pessoa/{id}", method =  RequestMethod.PUT)
     public ResponseEntity<Pessoa> Put(@PathVariable(value = "id") Integer id, @Valid @RequestBody Pessoa newPessoa)
     {
         Optional<Pessoa> oldPessoa = pessoaService.findById(id);
+        
+        if(!pessoaService.validarCadastro(newPessoa, false))
+        	 return new ResponseEntity<>(HttpStatus.CONFLICT);
+        	
         if(oldPessoa.isPresent()){
             pessoaService.save(newPessoa);
             return new ResponseEntity<Pessoa>(newPessoa, HttpStatus.OK);

@@ -3,6 +3,8 @@ package br.com.pamcary.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,31 @@ public class PessoaService {
 	@Transactional 
 	public void delete(Optional<Pessoa> pessoa) {
 		pessoaRepository.delete(pessoa.get());
+	}
+
+	/**
+	 * 
+	 * @param pessoa
+	 * @param cadastroNovo: indica se está tratando um cadastro novo ou uma atualização
+	 * @return
+	 */
+	@Transactional 
+	public boolean validarCadastro(Pessoa pessoa, boolean cadastroNovo) {
+		
+		if(!Util.isValidCPF(pessoa.getCpf()))
+			return false;
+		
+		// Para o cadastro novo, verifica se já não existe na base de dados. Se existir, não vai permitir o cadastro
+		if(cadastroNovo && existeCpf(pessoa.getCpf()))
+			return false;
+		
+		return true;
+	}
+
+	public boolean existeCpf(String cpf) {
+		
+		List<Pessoa> lista = findByCpf(cpf);
+		return lista.size() > 0;
 	}
 	
 }
