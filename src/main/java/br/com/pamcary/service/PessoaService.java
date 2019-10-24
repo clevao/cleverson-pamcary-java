@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.pamcary.entity.Pessoa;
 import br.com.pamcary.repository.PessoaRepository;
+import br.com.pamcary.util.Util;
 
 @Service
 public class PessoaService {
@@ -28,6 +29,7 @@ public class PessoaService {
 	
 	@Transactional
 	public List<Pessoa> findByCpf(String cpf) {
+		cpf = Util.removeNonNumeric(cpf);
 		return pessoaRepository.findByCpf(cpf);
 	} 
 	

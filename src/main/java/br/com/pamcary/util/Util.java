@@ -229,4 +229,52 @@ public class Util {
 		return datas;
 	}
 	
+	private static String calcDigVerif(String cpf) {
+		Integer digito1 = calcularDigito(cpf.substring(0,9));
+		Integer digito2 = calcularDigito(cpf.substring(0,9) + digito1);
+		return digito1 + "" + digito2;
+	} 
+	
+	
+	private static int calcularDigito(String str) {
+		int[] peso = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
+		int soma = 0;
+		for (int indice=str.length()-1, digito; indice >= 0; indice-- ) {
+			digito = Integer.parseInt(str.substring(indice,indice+1));
+			soma += digito*peso[peso.length-str.length()+indice];
+		}
+		soma = 11 - soma % 11;
+		return soma > 9 ? 0 : soma;
+	}
+
+	public static boolean isValidCPF(String cpf) {
+		if ((cpf==null) || (cpf.length()!=11)) return false;
+
+		Integer digito1 = calcularDigito(cpf.substring(0,9));
+		Integer digito2 = calcularDigito(cpf.substring(0,9) + digito1);
+		return cpf.equals(cpf.substring(0,9) + digito1.toString() + digito2.toString());
+	}
+
+	public static String geraCPF() {  
+	    String iniciais = "";  
+	    Integer numero;  
+	    for (int i = 0; i < 9; i++) {  
+	        numero = new Integer((int) (Math.random() * 10));  
+	        iniciais += numero.toString();  
+	    }  
+	    return iniciais + calcDigVerif(iniciais);  
+	}  
+
+	public static boolean validaCPF(String cpf) {  
+	    if (cpf.length() != 11)  
+	        return false;  
+
+	    String numDig = cpf.substring(0, 9);  
+	    return calcDigVerif(numDig).equals(cpf.substring(9, 11));  
+	} 
+	
+	public static void main(String[] args) {
+		System.out.println(calcDigVerif("373374138"));
+	}
+
 }
