@@ -49,7 +49,7 @@ public class PessoaService {
 	}
 
 	/**
-	 * 
+	 * Método responsável por verificar se os dados estão de acordo com as regras do sistema
 	 * @param pessoa
 	 * @param cadastroNovo: indica se está tratando um cadastro novo ou uma atualização
 	 * @return
@@ -61,16 +61,49 @@ public class PessoaService {
 			return false;
 		
 		// Para o cadastro novo, verifica se já não existe na base de dados. Se existir, não vai permitir o cadastro
-		if(cadastroNovo && existeCpf(pessoa.getCpf()))
+		if(existeCpf(pessoa.getCpf(), pessoa))
 			return false;
 		
 		return true;
 	}
 
-	public boolean existeCpf(String cpf) {
-		
+	/**
+	 * Método responsável por verificar se o CPF fornecido já não consta na base de dados
+	 * @param cpf
+	 * @return
+	 */
+	public boolean existeCpf(String cpf, Pessoa pessoa) {
+
 		List<Pessoa> lista = findByCpf(cpf);
-		return lista.size() > 0;
+		
+		if(lista.size() == 0)
+			return false; // retorna FALSE pois esse CPF ainda não cosnta na base de dados
+		else {
+			/* 
+			 * se achou algum CPF, verifique se ele já não pertence ao cadastro 
+			 * que está sendo editado. Se é do próprio cadastro, pode salvar
+			 * se não, não pode.
+			 */
+			if(pessoa != null) {
+				// se é um cadastro novo e encontrou o CPF na base, então já pertence a outro;
+				if(pessoa.getCodigo() == null)
+					return true;
+				
+				for(Pessoa p: lista) {
+					/* se o CPF encontrado pertence a uma pessoa diferente da que está sendo editada, 
+					 * o sistema não vai permitir também, pois esse CPF já está sendo usado
+					 * por outro cadastro
+					 */
+					if(pessoa.getCodigo() != p.getCodigo()) {
+						System.out.println(" **** Esse cpf pertence ao ID " + p.getCodigo());
+						return true;
+					}
+				}
+				return false;
+			}
+			return true;
+		}
 	}
-	
+
+
 }

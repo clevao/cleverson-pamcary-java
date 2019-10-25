@@ -16,12 +16,12 @@ public class UtilTest {
 	@Test
 	public void testCpfValido() {
 		String cpf = "37337413823";
-		assertEquals(true, Util.validaCPF(cpf));
+		assertEquals(true, Util.isValidCPF(cpf));
 	}
 	
 	@Test
 	public void testCpfInvalido() {
 		String cpf = "37337413822";
-		assertEquals(false, Util.validaCPF(cpf));
+		assertEquals(false, Util.isValidCPF(cpf));
 	}
 }

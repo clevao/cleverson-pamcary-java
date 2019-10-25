@@ -54,7 +54,7 @@ public class PessoaTest extends AvaliacaoApplicationTests {
 	public void testPessoaGetCpf() throws Exception {
 		// o CPF testado é do código 1. 
 		// Se der erro, verifique se o código 1 existe e tem esse CPF
-		mockMvc.perform(get("/pessoa/cpf/38545517842"))
+		mockMvc.perform(get("/pessoa/cpf/54393014022"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andExpect(jsonPath("$[*].codigo").isNotEmpty());
@@ -149,7 +149,7 @@ public class PessoaTest extends AvaliacaoApplicationTests {
 	
 	@Test
 	public void testCpfCadastrado() throws Exception {
-		assertEquals(true, pessoaService.existeCpf("54213325687"));
+		assertEquals(true, pessoaService.existeCpf("19792150064", new Pessoa()));
 	}
 	
 }

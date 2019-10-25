@@ -65,6 +65,11 @@ public class Util {
 		return soma > 9 ? 0 : soma;
 	}
 
+	/**
+	 * Método responsável por verificar se o cpf é válido
+	 * @param cpf
+	 * @return
+	 */
 	public static boolean isValidCPF(String cpf) {
 		if ((cpf==null) || (cpf.length()!=11)) return false;
 
@@ -73,6 +78,10 @@ public class Util {
 		return cpf.equals(cpf.substring(0,9) + digito1.toString() + digito2.toString());
 	}
 
+	/**
+	 * Esse método gera um número de cpf válido
+	 * @return
+	 */
 	public static String geraCPF() {  
 	    String iniciais = "";  
 	    Integer numero;  
@@ -82,13 +91,5 @@ public class Util {
 	    }  
 	    return iniciais + calcDigVerif(iniciais);  
 	}  
-
-	public static boolean validaCPF(String cpf) {  
-	    if (cpf.length() != 11)  
-	        return false;  
-
-	    String numDig = cpf.substring(0, 9);  
-	    return calcDigVerif(numDig).equals(cpf.substring(9, 11));  
-	} 
 	
 }
