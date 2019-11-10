@@ -62,6 +62,18 @@ public class PessoaController {
         else
             return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
+    
+    @RequestMapping(value = "/pessoa/lista", method =  RequestMethod.POST)
+    public ResponseEntity<Pessoa> PostList(@Valid @RequestBody List<Pessoa> pessoa)
+    {
+    	for (Pessoa pessoa2 : pessoa) {
+    		if(pessoaService.validarCadastro(pessoa2, true)){
+                pessoaService.save(pessoa2);
+            }
+		}
+        
+    	return new ResponseEntity<>(new Pessoa(), HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/pessoa/{id}", method =  RequestMethod.PUT)
     public ResponseEntity<Pessoa> Put(@PathVariable(value = "id") Integer id, @Valid @RequestBody Pessoa newPessoa)
