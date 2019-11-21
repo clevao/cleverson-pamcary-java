@@ -2,12 +2,15 @@ package br.com.pamcary.entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -36,6 +39,9 @@ public class Pessoa implements Serializable{
 	
 	@Column(name="DATA_NASCIMENTO")
 	private Timestamp dataNascimento;
+	
+	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+	private List<Telefone> telefones;
 
 	public Integer getCodigo() {
 		return codigo;
@@ -68,6 +74,16 @@ public class Pessoa implements Serializable{
 
 	public void setDataNascimento(Timestamp dataNascimento) {
 		this.dataNascimento = dataNascimento;
+	}
+	
+	
+
+	public List<Telefone> getTelefones() {
+		return telefones;
+	}
+
+	public void setTelefones(List<Telefone> telefones) {
+		this.telefones = telefones;
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package br.com.pamcary.pessoa;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.junit.Assert.assertEquals;
@@ -22,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.pamcary.AvaliacaoApplicationTests;
 import br.com.pamcary.entity.Pessoa;
+import br.com.pamcary.entity.Telefone;
 import br.com.pamcary.service.PessoaService;
 import br.com.pamcary.util.Util;
 
@@ -69,6 +72,7 @@ public class PessoaTest extends AvaliacaoApplicationTests {
 		pessoa.setNome(unq);
 		pessoa.setCpf(Util.geraCPF());
 		pessoa.setDataNascimento(Util.data2Timestamp("01/01/2000"));
+		pessoa.setTelefones(new ArrayList<Telefone>());
 				
 		mockMvc.perform(
 					post("/pessoa")
@@ -91,6 +95,7 @@ public class PessoaTest extends AvaliacaoApplicationTests {
 		pessoa.setNome(unq);
 		pessoa.setCpf("13546879854"); // cpf inválido
 		pessoa.setDataNascimento(Util.data2Timestamp("01/01/2000"));
+		pessoa.setTelefones(new ArrayList<Telefone>());
 				
 		mockMvc.perform(
 					post("/pessoa")
@@ -113,6 +118,7 @@ public class PessoaTest extends AvaliacaoApplicationTests {
 		pessoa.setNome(unqNome);
 		pessoa.setCpf(Util.geraCPF());
 		pessoa.setDataNascimento(Util.data2Timestamp("01/01/2000"));
+		pessoa.setTelefones(new ArrayList<Telefone>());
 		
 		// ATUALIZAÇÃO DO CADASTRO
 		mockMvc.perform(

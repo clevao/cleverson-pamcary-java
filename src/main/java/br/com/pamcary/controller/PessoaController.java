@@ -1,5 +1,6 @@
 package br.com.pamcary.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pamcary.entity.Pessoa;
+import br.com.pamcary.entity.Telefone;
 import br.com.pamcary.service.PessoaService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -55,7 +57,13 @@ public class PessoaController {
     @RequestMapping(value = "/pessoa", method =  RequestMethod.POST)
     public ResponseEntity<Pessoa> Post(@Valid @RequestBody Pessoa pessoa)
     {
+    	if(pessoa.getTelefones() == null)
+    		pessoa.setTelefones(new ArrayList<Telefone>());
+    	
         if(pessoaService.validarCadastro(pessoa, true)){
+        	for(Telefone tel : pessoa.getTelefones()) {
+        		tel.setPessoa(pessoa);
+        	}
             pessoaService.save(pessoa);
             return new ResponseEntity<Pessoa>(pessoa, HttpStatus.OK);
         }
@@ -67,6 +75,9 @@ public class PessoaController {
     public ResponseEntity<Pessoa> PostList(@Valid @RequestBody List<Pessoa> pessoa)
     {
     	for (Pessoa pessoa2 : pessoa) {
+    		if(pessoa2.getTelefones() == null)
+        		pessoa2.setTelefones(new ArrayList<Telefone>());
+        	
     		if(pessoaService.validarCadastro(pessoa2, true)){
                 pessoaService.save(pessoa2);
             }
@@ -84,6 +95,12 @@ public class PessoaController {
         	 return new ResponseEntity<>(HttpStatus.CONFLICT);
         	
         if(oldPessoa.isPresent()){
+        	if(newPessoa.getTelefones() == null)
+        		newPessoa.setTelefones(new ArrayList<Telefone>());
+        	
+        	for(Telefone tel : newPessoa.getTelefones()) {
+        		tel.setPessoa(newPessoa);
+        	}
             pessoaService.save(newPessoa);
             return new ResponseEntity<Pessoa>(newPessoa, HttpStatus.OK);
         }
